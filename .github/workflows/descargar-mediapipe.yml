@@ -1,0 +1,36 @@
+name: Descargar MediaPipe (para uso sin internet)
+
+# Se ejecuta a mano: pestaña Actions → "Descargar MediaPipe" → Run workflow.
+# Baja el detector de manos y lo guarda en la carpeta mediapipe/ de este repositorio.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  descargar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bajar archivos de MediaPipe
+        run: |
+          set -e
+          mkdir -p mediapipe/wasm
+          npm pack @mediapipe/tasks-vision@0.10.14
+          tar -xzf mediapipe-tasks-vision-0.10.14.tgz
+          cp package/vision_bundle.mjs mediapipe/
+          cp package/wasm/* mediapipe/wasm/
+          curl -fL -o mediapipe/hand_landmarker.task \
+            https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+          rm -rf package mediapipe-tasks-vision-0.10.14.tgz
+          ls -la mediapipe mediapipe/wasm
+
+      - name: Guardar en el repositorio
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add mediapipe
+          git commit -m "Agregar MediaPipe local (uso sin internet)" || echo "Sin cambios"
+          git push

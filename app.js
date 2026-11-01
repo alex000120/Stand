@@ -2291,3 +2291,22 @@ function confeti() {
     }
   }, 300);
 })();
+
+/* ═══ v4 · CURSOR DE MANO: apunta con 1 mano y mantén sobre una opción para elegirla ═══ */
+(function () {
+  document.querySelectorAll('.gestos-grid > [role=button]').forEach((e, i) => { e.dataset.cat = i < 5 ? 'v' : i < 8 ? 'a' : i === 8 ? 'h' : 'j'; });
+  const cur = document.createElement('div'); cur.id = 'cursorMano'; $('app').appendChild(cur);
+  let el = null, t0 = 0;
+  const fin = () => { if (el) { el.classList.remove('sel'); el.style.removeProperty('--p'); el = null; } };
+  setInterval(() => {
+    if (!(estado.welcomeVisible && G.manos.length === 1 && G.W)) { cur.classList.remove('v'); fin(); return; }
+    const h = G.manos[0], x = h.p[16] / G.W * innerWidth, y = h.p[17] / G.H * innerHeight;
+    cur.style.transform = 'translate(' + x + 'px,' + y + 'px)'; cur.classList.add('v');
+    const c = document.elementFromPoint(x, y), n = c && c.closest('.gestos-grid > [role=button]');
+    if (n !== el) { fin(); el = n; t0 = performance.now(); if (n) n.classList.add('sel'); }
+    if (!el) { cur.style.setProperty('--p', '0%'); return; }
+    const p = Math.min(100, (performance.now() - t0) / 12);
+    el.style.setProperty('--p', p + '%'); cur.style.setProperty('--p', p + '%');
+    if (p >= 100) { const e = el; fin(); sonido('ok'); e.click(); }
+  }, 50);
+})();

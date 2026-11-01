@@ -4,7 +4,7 @@
      y se sirven siempre desde el celular: sin esperas ni cortes de red.
    Cada vez que cambies archivos de la app, subí el número de VERSION. */
 'use strict';
-const VERSION = 'v3';
+const VERSION = 'v4';
 const SHELL = 'holo-shell-' + VERSION;
 const MEDIA = 'holo-media-v1';   // mismo nombre que MEDIA_CACHE en app.js
 const SHELL_FILES = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest',

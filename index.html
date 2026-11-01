@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05070d">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>CEJA Lidoro Quinteros · Stand Interactivo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <div id="brand" aria-hidden="true"><b>CEJA LIDORO QUINTEROS</b><span>SUBSEDE N°1 · LOS RALOS</span><i id="brandV"></i></div>
+  <div id="videoStage">
+    <video id="video" class="vid" playsinline loop muted></video>
+    <video id="video2" class="vid" playsinline loop muted></video>
+    <div id="ambi"></div>
+    <div id="mensajeVideo">Muestra una seña con AMBAS manos frente a la cámara</div>
+  </div>
+
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <canvas id="gm" aria-hidden="true"></canvas>
+
+  <div id="welcome" class="oculto">
+    <div class="boot">SISTEMA EN LÍNEA</div>
+    <h1>¿Con qué empezamos, <span>Alex</span>?</h1>
+    <div class="sub">Haz una seña con AMBAS manos, toca una opción… o ¡juega con tus manos! 🎮</div>
+    <div id="ticker" aria-live="polite"></div>
+    <div class="gestos-grid">
+      <div role="button" tabindex="0" data-video="0"><span class="emoji">☝️☝️</span><div><span class="label">Video 1</span><span class="hint">1 dedo (2 manos)</span></div></div>
+      <div role="button" tabindex="0" data-video="1"><span class="emoji">✌️✌️</span><div><span class="label">Video 2</span><span class="hint">2 dedos (2 manos)</span></div></div>
+      <div role="button" tabindex="0" data-video="2"><span class="emoji">🖖🖖</span><div><span class="label">Video 3</span><span class="hint">3 dedos (2 manos)</span></div></div>
+      <div role="button" tabindex="0" data-video="3"><span class="emoji">🤙🤙</span><div><span class="label">Video 4</span><span class="hint">Pulgar + meñique</span></div></div>
+      <div role="button" tabindex="0" data-video="4"><span class="emoji">🖐️🖐️</span><div><span class="label">Video 5</span><span class="hint">5 dedos</span></div></div>
+      <div role="button" tabindex="0" data-action="playpause"><span class="emoji">✊✊</span><div><span class="label">Play / Pausa</span><span class="hint">Puño</span></div></div>
+      <div role="button" tabindex="0" data-action="siguiente"><span class="emoji">👍👍</span><div><span class="label">Siguiente</span><span class="hint">Pulgar arriba</span></div></div>
+      <div role="button" tabindex="0" data-action="fullscreen"><span class="emoji">🤟🤟</span><div><span class="label">Pantalla completa</span><span class="hint">"Te amo"</span></div></div>
+      <div role="button" tabindex="0" data-gesto="corazon"><span class="emoji">💚</span><div><span class="label">Corazón · Cierre</span><span class="hint">Juntar índices y pulgares</span></div></div>
+      <div role="button" tabindex="0" class="juego" data-juego="ninja"><span class="emoji">⚔️</span><div><span class="label">Corte Ninja</span><span class="hint">Letra L: índice + pulgar</span></div></div>
+      <div role="button" tabindex="0" class="juego" data-juego="ritmo"><span class="emoji">🎵</span><div><span class="label">Ritmo Holo</span><span class="hint">🤘 índice + meñique</span></div></div>
+      <div role="button" tabindex="0" class="juego" data-juego="simon"><span class="emoji">🧠</span><div><span class="label">Memoria Holo</span><span class="hint">👌 OK</span></div></div>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div class="chip">FPS <b id="fps">0</b></div>
+    <div class="chip">Gesto <b id="gestoActual">—</b></div>
+    <div class="chip">Video <b id="videoActual">—</b>/5</div>
+  </div>
+
+  <div id="progreso">
+    <div id="progresoTexto">—</div>
+    <div id="progresoBarra"><div id="progresoFill"></div></div>
+  </div>
+
+  <div id="reticula" aria-hidden="true">
+    <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><circle id="retAro" cx="50" cy="50" r="46" pathLength="100"/></svg>
+    <span id="retEmoji"></span><span id="retTxt"></span>
+  </div>
+
+  <div id="juegoUI" class="oculto">
+    <div id="jTop">
+      <div id="jPuntos">0</div>
+      <div id="jBarraW"><div id="jBarra"></div></div>
+      <div id="jCombo"></div>
+    </div>
+    <div id="jCuenta"></div>
+    <div id="jTitulo"><b></b><span></span></div>
+    <button class="btn-flotante" id="btnSalirJuego" aria-label="Salir del juego">✕</button>
+    <div id="jResultado" class="oculto">
+      <h2 id="jResTitulo">¡Tiempo!</h2>
+      <div id="jResPuntos">0</div>
+      <div id="jResRec"></div>
+      <div class="fila">
+        <button id="btnOtra">🔁 Otra vez</button>
+        <button id="btnMenu" class="sec">Menú</button>
+      </div>
+      <div class="tip">🖐️🖐️ otra vez · 👍👍 menú</div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <button class="btn-flotante" id="btnAyuda" aria-label="Ayuda de gestos">?</button>
+  <button class="btn-flotante" id="btnMute" aria-label="Silenciar o activar sonido">🔇</button>
+  <button class="btn-flotante" id="btnFull" aria-label="Pantalla completa">🔳</button>
+  <button class="btn-flotante" id="btnRend" aria-label="Rendimiento">⚡</button>
+  <button class="btn-flotante" id="btnCam" aria-label="Cambiar cámara frontal o trasera">🤳</button>
+
+  <div id="ayuda">
+    <div class="titulo">🙌 Gestos (2 manos)</div>
+    <div><b>☝️☝️</b> Índice → Video 1</div>
+    <div><b>✌️✌️</b> Índice+Medio → Video 2</div>
+    <div><b>🖖🖖</b> 3 dedos → Video 3</div>
+    <div><b>🤙🤙</b> Pulgar+Meñique → Video 4</div>
+    <div><b>🖐️🖐️</b> 5 dedos → Video 5</div>
+    <div><b>✊✊</b> Puño → Play/Pausa</div>
+    <div><b>👍👍</b> Pulgar arriba → Siguiente</div>
+    <div><b>🤟🤟</b> "Te amo" → Pantalla completa</div>
+    <div><b>💚💚</b> Corazón → Cierre ✨</div>
+    <div class="titulo" style="margin-top:8px">🎮 Juegos</div>
+    <div><b>L L</b> Índice+Pulgar → ⚔️ Corte Ninja</div>
+    <div><b>🤘🤘</b> Índice+Meñique → 🎵 Ritmo Holo</div>
+    <div><b>👌👌</b> OK → 🧠 Memoria Holo</div>
+    <div><b>👍👍</b> dentro de un juego → salir</div>
+    <div class="titulo" style="margin-top:8px">👋 Deslizar</div>
+    <div>1 mano abierta: desliza <b>←</b> siguiente · <b>→</b> anterior</div>
+    <div style="margin-top:6px;color:#5a8ba8;font-size:10px;">Teclas: 1-5 videos · 6-8 juegos · Espacio · N · F · M · C cámara · H · Esc</div>
+  </div>
+
+  <div id="camPiP">
+    <video id="cam" playsinline muted autoplay></video>
+    <canvas id="overlay"></canvas>
+  </div>
+
+  <div id="inicio" class="pantalla">
+    <h1>🏫 CEJA Lidoro Quinteros<br><small>Subsede N°1 · Los Ralos</small></h1>
+    <p>Muestra el mismo gesto con AMBAS manos. Mantén la seña un instante para activarla. Ajusta el rendimiento si va lento en tu dispositivo.</p>
+    <div id="estado">Pulsa Iniciar para comenzar</div>
+    <div class="cam-sel" role="group" aria-label="Elegir cámara">
+      <button type="button" data-cam="user">🤳 Frontal</button>
+      <button type="button" data-cam="environment">📷 Trasera</button>
+    </div>
+    <button id="btnIniciar">Iniciar cámara</button>
+    <button id="btnRend2" class="sec small">⚡ Rendimiento</button>
+    <button id="btnConfig" class="sec small">⚙️ Configurar</button>
+    <button id="btnSinCam" class="sec small">Continuar sin cámara (toques / teclado)</button>
+    <div id="error"></div>
+  </div>
+
+  <div id="rendimiento" class="pantalla oculto">
+    <h1>⚡ Rendimiento</h1>
+    <p>Elige un preset rápido o ajusta manualmente.</p>
+    <div id="presetsGrid">
+      <button data-preset="minimo">Mínimo</button>
+      <button data-preset="bajo">Bajo</button>
+      <button data-preset="medio">Medio</button>
+      <button data-preset="alto">Alto</button>
+      <button data-preset="auto">Auto</button>
+    </div>
+    <div id="rendInfo"></div>
+    <div id="rendPanel">
+      <label>FPS máximo de detección
+        <select id="selFps">
+          <option value="6">6 · mínimo</option>
+          <option value="8">8</option>
+          <option value="12">12</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="30">30 · máximo</option>
+        </select>
+      </label>
+      <label>Calidad del overlay
+        <select id="selOverlay">
+          <option value="off">Apagado · más rápido</option>
+          <option value="low">Simple · solo puntos</option>
+          <option value="full">Completo · esqueleto</option>
+        </select>
+      </label>
+      <label>Procesador del detector
+        <select id="selDelegado">
+          <option value="GPU">GPU · más rápido (recomendado)</option>
+          <option value="CPU">CPU · más compatible</option>
+        </select>
+      </label>
+      <label>Resolución de cámara
+        <select id="selCam">
+          <option value="320x240">320×240 · más rápido</option>
+          <option value="480x360">480×360</option>
+          <option value="640x480">640×480 · más nítido</option>
+        </select>
+      </label>
+      <label>Tiempo para activar gesto
+        <select id="selTiempo">
+          <option value="400">400 ms · rápido</option>
+          <option value="600">600 ms · balanceado</option>
+          <option value="900">900 ms · estable</option>
+          <option value="1200">1200 ms · muy estable</option>
+        </select>
+      </label>
+      <label>Volver al inicio por inactividad (si no hay video en reproducción)
+        <select id="selInactividad">
+          <option value="0">Nunca</option>
+          <option value="30">30 s</option>
+          <option value="60">60 s</option>
+          <option value="120">120 s</option>
+        </select>
+      </label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="chkEfectos">
+        <label for="chkEfectos" style="flex-direction:row;color:#e8f6ff;font-size:12px;">Reducir efectos visuales (transiciones simples)</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="chkAmbilight">
+        <label for="chkAmbilight" style="flex-direction:row;color:#e8f6ff;font-size:12px;">Luz ambiente en el borde del video (gasta más batería y CPU)</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="chkSonidos">
+        <label for="chkSonidos" style="flex-direction:row;color:#e8f6ff;font-size:12px;">Sonidos de confirmación</label>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="chkRecuerdo">
+        <label for="chkRecuerdo" style="flex-direction:row;color:#e8f6ff;font-size:12px;">Recuerdo fotográfico al cerrar (se queda en este dispositivo)</label>
+      </div>
+    </div>
+    <button id="btnAplicarRend">Aplicar</button>
+    <button id="btnCerrarRend" class="sec">Cerrar</button>
+  </div>
+
+  <div id="config" class="pantalla oculto">
+    <h1>⚙️ Configuración</h1>
+    <p>URLs de videos, textos y uso sin internet.</p>
+    <div id="configPanel"></div>
+    <button id="btnGuardar">Guardar</button>
+    <button id="btnCancelar" class="sec">Cancelar</button>
+  </div>
+
+  <!-- ═══ CIERRE: CORAZÓN HOLOGRÁFICO ═══ -->
+  <div id="celebracion" class="oculto" role="dialog" aria-label="Gracias por visitar nuestro stand">
+    <div class="holo-glow"></div>
+    <svg class="corazon-holo" viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <linearGradient id="gradCorazon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#38ffb0"/>
+          <stop offset="55%" stop-color="#00d1ff"/>
+          <stop offset="100%" stop-color="#ff4d9d"/>
+        </linearGradient>
+        <filter id="glowHolo" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="1.6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <path class="trazo-corazon" pathLength="100"
+            d="M50 88 C 20 65, 8 45, 15 30 C 22 15, 40 15, 50 30 C 60 15, 78 15, 85 30 C 92 45, 80 65, 50 88 Z"
+            fill="none" stroke="url(#gradCorazon)" stroke-width="2.2"
+            stroke-linecap="round" filter="url(#glowHolo)"/>
+    </svg>
+    <div class="texto-celebracion">
+      <div class="linea-1">gracias por visitar</div>
+      <div class="linea-2">nuestro stand ✨</div>
+    </div>
+    <div class="sparkles" aria-hidden="true"><span>✨</span><span>✨</span><span>✨</span><span>✨</span><span>✨</span></div>
+    <div id="recuerdo" hidden>
+      <img id="recImg" alt="Recuerdo de tu visita">
+      <a id="recDl" role="button">Guardar 💾</a> <a id="recShare" role="button" hidden>Compartir 📤</a>
+    </div>
+    <div class="escuela"><b>CEJA LIDORO QUINTEROS</b><span>SUBSEDE N°1 · LOS RALOS</span><em id="visitanteN"></em></div>
+    <div class="tap-cerrar">toca para cerrar</div>
+  </div>
+
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#05070d">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Stand interactivo CEJA Lidoro Quinteros: control por gestos, videos y juegos.">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script>/* escala fluida: 1 en celulares, hasta 3.5 en TV/4K (--k); se recalcula al girar o redimensionar */
+(function(){var d=document.documentElement,f=function(){var m=Math.min(innerWidth,innerHeight),k=Math.max(1,Math.min(3.5,m/560));d.style.setProperty('--k',k.toFixed(2))};f();addEventListener('resize',f);addEventListener('orientationchange',f)})();</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -25,7 +31,7 @@
   <canvas id="fx" aria-hidden="true"></canvas>
   <canvas id="gm" aria-hidden="true"></canvas>
 
-  <div id="welcome" class="oculto">
+  <div id="welcome" class="oculto"><div id="welcomeIn">
     <div class="boot">SISTEMA EN LÍNEA</div>
     <h1>¿Con qué empezamos, <span>Alex</span>?</h1>
     <div class="sub">☝️ Apunta con UNA mano a una opción y mantenla · o haz una seña con AMBAS manos</div>
@@ -44,7 +50,7 @@
       <div role="button" tabindex="0" class="juego" data-juego="ritmo"><span class="emoji">🎵</span><div><span class="label">Ritmo Holo</span><span class="hint">🤘 índice + meñique</span></div></div>
       <div role="button" tabindex="0" class="juego" data-juego="simon"><span class="emoji">🧠</span><div><span class="label">Memoria Holo</span><span class="hint">👌 OK</span></div></div>
     </div>
-  </div>
+  </div></div>
 
   <div id="hud">
     <div class="chip">FPS <b id="fps">0</b></div>

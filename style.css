@@ -501,3 +501,211 @@ body{background:#04060c}
 .pantalla button{box-shadow:0 8px 28px rgba(56,255,176,.35);letter-spacing:.4px}
 #celebracion{background:radial-gradient(circle at 50% 45%,rgba(255,77,157,.18),rgba(56,255,176,.14) 30%,rgba(3,6,12,.97) 68%)}
 .escuela b{font-size:clamp(17px,4.6vw,30px)}
+
+/* ═══════════════════════════════════════════════════════════════
+   v5 · RESPONSIVE TOTAL + RENDIMIENTO
+   --k = escala fluida (1 en celular … 3.5 en TV/4K), la calcula un script en index.html
+   Todo lo de abajo reemplaza a lo anterior (mismo selector, va al final).
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --k:1;
+  --m:calc(12px*var(--k)); --g:calc(8px*var(--k)); --bs:calc(42px*var(--k)); --bh:calc(54px*var(--k) + 20px);
+  --sl:env(safe-area-inset-left,0px); --sr:env(safe-area-inset-right,0px);
+  --st:env(safe-area-inset-top,0px);  --sb:env(safe-area-inset-bottom,0px);
+  --pip-size:clamp(96px,min(26vw,calc(34vh*1.333)),calc(260px*var(--k)));
+  --pip-size-fs:clamp(72px,min(14vw,calc(20vh*1.333)),calc(150px*var(--k)));
+}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none}
+body{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,select,textarea{-webkit-user-select:text;user-select:text}
+
+/* video */
+#videoStage{inset:calc(4px + var(--st)) calc(4px + var(--sr)) calc(4px + var(--sb)) calc(4px + var(--sl))}
+@media (min-width:768px){#videoStage{inset:calc(12px + var(--st)) calc(12px + var(--sr)) calc(12px + var(--sb)) calc(12px + var(--sl))}}
+
+/* botones flotantes: fila arriba-derecha (pantallas anchas) · columna (angostas) */
+.btn-flotante{width:var(--bs);height:var(--bs);font-size:calc(17px*var(--k))}
+#btnAyuda{right:calc(var(--m) + var(--sr));top:calc(var(--m) + var(--st))}
+#btnMute{right:calc(var(--m) + var(--sr));top:calc(var(--m) + var(--st) + var(--bs) + var(--g))}
+#btnFull{right:calc(var(--m) + var(--sr));top:calc(var(--m) + var(--st) + 2*(var(--bs) + var(--g)))}
+#btnRend{left:calc(var(--m) + var(--sl));bottom:calc(var(--m) + var(--sb))}
+#btnCam{left:calc(var(--m) + var(--sl) + var(--bs) + var(--g));bottom:calc(var(--m) + var(--sb))}
+#btnSalirJuego{left:calc(var(--m) + var(--sl));top:calc(var(--m) + var(--st))}
+@media (min-aspect-ratio:8/7) and (min-width:640px){   /* apaisado ancho: fila arriba a la derecha */
+  #btnMute{right:calc(var(--m) + var(--sr) + var(--bs) + var(--g));top:calc(var(--m) + var(--st))}
+  #btnFull{right:calc(var(--m) + var(--sr) + 2*(var(--bs) + var(--g)));top:calc(var(--m) + var(--st))}
+}
+
+/* cartel de la escuela: nunca pisa los botones */
+#brand{top:var(--st);max-width:calc(100% - 2*(var(--bs) + var(--m) + var(--g) + var(--sl) + var(--sr)));padding:calc(6px*var(--k)) calc(18px*var(--k)) calc(7px*var(--k))}
+#brand b{font-size:clamp(8.5px,2.8vw,calc(15px*var(--k)));letter-spacing:.14em}
+#brand span{font-size:clamp(8px,1.8vw,calc(11px*var(--k)));letter-spacing:.2em}
+#brand i{font-size:clamp(8px,1.6vw,calc(10px*var(--k)))}
+@media (min-aspect-ratio:8/7) and (min-width:640px){#brand{max-width:calc(100% - 2*(3*var(--bs) + 2*var(--g) + var(--m) + var(--sl) + var(--sr)))}}
+
+/* HUD y progreso */
+#hud{top:calc(var(--m) + var(--st));left:calc(var(--m) + var(--sl));font-size:calc(11px*var(--k));flex-direction:column;align-items:flex-start;gap:4px;max-width:none}
+.chip{padding:calc(4px*var(--k)) calc(10px*var(--k))}
+#progreso{top:calc(var(--bh) + var(--st) + 4px);font-size:calc(11px*var(--k));min-width:calc(170px*var(--k));max-width:calc(100% - 2*(var(--bs) + var(--m) + var(--g)) - var(--sl) - var(--sr))}
+@media (max-width:300px){:root{--bh:98px}}
+@media (max-height:420px) and (max-width:700px){body.en-bienvenida #btnRend,body.en-bienvenida #btnCam{display:none}}
+@media (max-width:559px){   /* celular vertical: el HUD pasa a una fila bajo el cartel */
+  #hud{top:calc(var(--bh) + var(--st));flex-direction:row;gap:6px;font-size:10.5px;max-width:calc(100% - var(--bs) - 2*var(--m) - var(--g) - var(--sl) - var(--sr))}
+  .chip{padding:3px 8px}
+  #progreso{top:calc(var(--bh) + var(--st) + 32px)}
+}
+
+/* cámara */
+#camPiP{right:calc(var(--m) + var(--sr));bottom:calc(var(--m) + var(--sb))}
+
+/* ayuda */
+#ayuda{top:calc(var(--m) + var(--st));right:calc(var(--m) + var(--sr) + var(--bs) + var(--g));z-index:16;
+  font-size:calc(11px*var(--k));max-width:min(calc(270px*var(--k)),calc(100% - 2*var(--m) - var(--bs) - var(--g) - var(--sl) - var(--sr)));
+  max-height:calc(100% - 2*var(--m) - var(--st) - var(--sb));overscroll-behavior:contain}
+@media (min-aspect-ratio:8/7) and (min-width:640px){
+  #ayuda{top:calc(var(--m) + var(--st) + var(--bs) + var(--g));right:calc(var(--m) + var(--sr));max-width:min(calc(270px*var(--k)),calc(100% - 2*var(--m)));
+    max-height:calc(100% - 3*var(--m) - var(--bs) - var(--g) - var(--st) - var(--sb))}
+}
+#toast{bottom:calc(var(--bs) + 2*var(--m) + var(--sb));font-size:calc(12px*var(--k));padding:calc(6px*var(--k)) calc(16px*var(--k));max-width:calc(100% - 2*var(--m));white-space:normal;text-align:center}
+
+/* ═══ Pantalla de bienvenida ═══ */
+#welcome{padding:0;overflow:hidden}
+#welcomeIn{position:absolute;inset:0;z-index:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;
+  gap:calc(8px*var(--k));text-align:center;overscroll-behavior:contain;scrollbar-width:none;
+  padding:calc(var(--bh) + var(--st) + 6px) calc(16px*var(--k) + var(--sr)) calc(16px*var(--k) + var(--sb)) calc(16px*var(--k) + var(--sl))}
+#welcomeIn::-webkit-scrollbar{display:none}
+#welcomeIn>:first-child{margin-top:auto}
+#welcomeIn>:last-child{margin-bottom:auto}
+#welcome .boot{font-size:calc(10px*var(--k))}
+#welcome h1{font-size:clamp(22px,min(6.4vw,7.2vh),calc(46px*var(--k)))}
+#welcome .sub{font-size:clamp(11px,min(2.6vw,2.4vh),calc(14px*var(--k)));max-width:calc(480px*var(--k))}
+#ticker{font-size:clamp(11px,min(2.8vw,2.6vh),calc(14px*var(--k)));max-width:100%}
+
+/* la cámara y los botones de abajo nunca tapan una opción */
+body.en-bienvenida{--pip-size:clamp(72px,min(18vw,calc(18vh*1.333)),calc(200px*var(--k)))}
+body.en-bienvenida #welcomeIn{padding-bottom:calc(max(var(--pip-size)*.75,var(--bs)) + 2*var(--m) + var(--sb))}
+@media (max-height:520px) and (min-width:600px){
+  :root{--bh:68px}
+  #welcomeIn{gap:6px}
+  #welcome .sub{display:none}
+  #welcome h1{font-size:20px}
+  #ticker{padding:4px 14px;min-height:0}
+  body.en-bienvenida #welcomeIn{padding-bottom:calc(10px + var(--sb));padding-right:calc(var(--pip-size) + 2*var(--m) + var(--sr))}
+}
+
+/* cuadrícula · modo cómodo (tarjetas horizontales con descripción) */
+.gestos-grid{width:100%;max-width:calc(620px*var(--k));gap:calc(10px*var(--k));grid-template-columns:repeat(3,1fr);margin-top:0}
+@media (min-width:900px) and (min-height:600px){.gestos-grid{grid-template-columns:repeat(4,1fr);max-width:calc(840px*var(--k))}}
+.gestos-grid>div{padding:calc(10px*var(--k)) calc(12px*var(--k));gap:calc(10px*var(--k));border-radius:calc(16px*var(--k));min-width:0}
+.gestos-grid .emoji{font-size:calc(22px*var(--k));width:calc(40px*var(--k));height:calc(40px*var(--k));border-radius:calc(12px*var(--k))}
+.gestos-grid .label{font-size:calc(12.5px*var(--k));line-height:1.2}
+.gestos-grid .hint{font-size:calc(10.5px*var(--k));line-height:1.25}
+.gestos-grid>div.juego::after{font-size:calc(8px*var(--k))}
+
+/* cuadrícula · modo compacto (celular vertical o pantallas bajas): todo entra sin scroll */
+@media (max-height:820px){#welcome .boot{display:none}}
+@media (max-width:519px),(max-height:599px){
+  .gestos-grid{gap:calc(7px*var(--k))}
+  .gestos-grid>div{flex-direction:column;justify-content:center;text-align:center;gap:3px;padding:calc(7px*var(--k)) 4px}
+  .gestos-grid>div>div{min-width:0}
+  .gestos-grid .hint{display:none}
+  .gestos-grid .emoji{font-size:calc(19px*var(--k));width:calc(34px*var(--k));height:calc(34px*var(--k))}
+  .gestos-grid .label{font-size:clamp(10px,calc(11px*var(--k)),calc(15px*var(--k)))}
+  .gestos-grid>div.juego::after{right:5px;top:3px;font-size:7px}
+}
+@media (max-height:599px) and (min-width:520px){.gestos-grid{grid-template-columns:repeat(4,1fr);max-width:calc(760px*var(--k))}}
+@media (max-height:599px) and (min-width:700px){.gestos-grid{grid-template-columns:repeat(6,1fr);max-width:calc(900px*var(--k))}}
+@media (max-width:519px){.gestos-grid{max-width:420px}}
+
+/* ═══ Pantallas (inicio / rendimiento / configuración) ═══ */
+.pantalla{justify-content:flex-start;gap:calc(12px*var(--k));
+  padding:calc(20px*var(--k) + var(--st)) calc(20px*var(--k) + var(--sr)) calc(20px*var(--k) + var(--sb)) calc(20px*var(--k) + var(--sl));overscroll-behavior:contain}
+.pantalla>:first-child{margin-top:auto}
+.pantalla>:last-child{margin-bottom:auto}
+.pantalla h1{font-size:clamp(22px,min(6vw,6.5vh),calc(36px*var(--k)))}
+.pantalla p{font-size:calc(12.5px*var(--k));max-width:calc(360px*var(--k))}
+.pantalla button{font-size:calc(14px*var(--k));padding:calc(13px*var(--k)) calc(30px*var(--k));min-width:calc(200px*var(--k));min-height:44px}
+.pantalla button.small{font-size:calc(12px*var(--k));padding:calc(10px*var(--k)) calc(20px*var(--k));min-width:0}
+.pantalla .cam-sel button{font-size:calc(12px*var(--k));padding:calc(10px*var(--k)) calc(16px*var(--k));min-width:0}
+#estado,#error{font-size:calc(12px*var(--k))}
+#error{max-width:calc(360px*var(--k))}
+#configPanel,#rendPanel,#presetsGrid{max-width:calc(420px*var(--k))}
+#configPanel,#rendPanel{max-height:min(60vh,calc(520px*var(--k)))}
+#configPanel label,#rendPanel label{font-size:calc(11.5px*var(--k))}
+#configPanel input,#configPanel select,#rendPanel select{font-size:max(16px,calc(12px*var(--k)))}  /* 16px: iOS no hace zoom al tocar */
+#presetsGrid button{font-size:calc(11.5px*var(--k));min-height:44px}
+#rendInfo{max-width:calc(420px*var(--k));font-size:calc(11px*var(--k))}
+@media (max-height:520px) and (orientation:landscape){
+  .pantalla{flex-direction:row;flex-wrap:wrap;align-content:center;align-content:safe center;justify-content:center;gap:8px 12px;padding:10px 16px}
+  .pantalla>:first-child,.pantalla>:last-child{margin:0}
+  .pantalla>h1,.pantalla>p,#estado,#error,#presetsGrid,#rendInfo,#configPanel,#rendPanel,.cam-sel{flex:0 0 100%;justify-content:center}
+  .pantalla>h1,.pantalla>p,#presetsGrid,#rendInfo,#configPanel,#rendPanel,#error{margin-left:auto;margin-right:auto}
+  .pantalla h1{font-size:20px}
+  #configPanel,#rendPanel{max-height:none;overflow:visible}
+  .pantalla button{padding:9px 22px;min-width:150px}
+}
+
+/* ═══ Juegos ═══ */
+#jTop{width:min(70vw,calc(360px*var(--k)));top:calc(10px + var(--st))}
+#jCombo{font-size:calc(13px*var(--k));min-height:calc(16px*var(--k))}
+#jTitulo{width:min(90vw,calc(460px*var(--k)))}
+#jTitulo span{font-size:calc(12px*var(--k))}
+#jResultado{padding:calc(22px*var(--k)) calc(30px*var(--k));min-width:min(80vw,calc(320px*var(--k)));max-height:calc(100% - 20px);overflow:auto}
+#jResultado h2{font-size:calc(22px*var(--k))}
+#jResRec{font-size:calc(13px*var(--k))}
+#jResultado button{font-size:calc(13px*var(--k));padding:calc(10px*var(--k)) calc(18px*var(--k));min-height:44px}
+#jResultado .tip{font-size:calc(11px*var(--k))}
+
+/* ═══ Cierre (corazón) · entra en cualquier pantalla ═══ */
+#celebracion{overflow:hidden;padding:var(--st) var(--sr) var(--sb) var(--sl)}
+.corazon-holo{width:clamp(110px,min(46vw,36vh),calc(340px*var(--k)));height:clamp(110px,min(46vw,36vh),calc(340px*var(--k)))}
+.texto-celebracion{font-size:clamp(15px,min(4.2vw,5.4vh),calc(26px*var(--k)));margin-top:calc(14px*var(--k))}
+.escuela{margin-top:calc(10px*var(--k))}
+.escuela b{font-size:clamp(13px,min(4.2vw,5vh),calc(26px*var(--k)))}
+.escuela span{font-size:clamp(9px,min(2.6vw,2.8vh),calc(14px*var(--k)))}
+.escuela em{font-size:calc(11px*var(--k));margin-top:calc(6px*var(--k))}
+.tap-cerrar{bottom:calc(12px + var(--sb));font-size:calc(10px*var(--k))}
+#recuerdo{width:clamp(90px,min(24vmin,30vh),calc(220px*var(--k)));left:calc(clamp(10px,3vw,28px) + var(--sl));bottom:calc(clamp(34px,8vh,70px) + var(--sb))}
+#recuerdo a{font-size:calc(11px*var(--k));padding:calc(7px*var(--k)) calc(14px*var(--k))}
+/* vertical: el recuerdo se acomoda en la columna, entre el texto y la escuela (no se superpone) */
+@media (max-aspect-ratio:1/1){
+  #recuerdo{position:relative;left:auto;bottom:auto;margin-top:calc(14px*var(--k));width:clamp(96px,min(34vw,22vh),calc(240px*var(--k)))}
+  #celebracion:has(#recuerdo:not([hidden])) .corazon-holo{width:clamp(96px,min(38vw,22vh),calc(300px*var(--k)));height:clamp(96px,min(38vw,22vh),calc(300px*var(--k)))}
+  #celebracion:has(#recuerdo:not([hidden])) .texto-celebracion{margin-top:calc(8px*var(--k))}
+}
+
+/* ═══ Rendimiento: sin desenfoques costosos en equipos modestos ═══ */
+body.reduce-effects{--glass:rgba(10,20,36,.84)}
+body.reduce-effects *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.reduce-effects #welcome{background:rgba(3,6,14,.9)}
+body.reduce-effects .gestos-grid>div{box-shadow:none}
+body.reduce-effects .gestos-grid .emoji{box-shadow:none}
+body.reduce-effects #camPiP,body.reduce-effects #brand,body.reduce-effects .btn-flotante{box-shadow:none}
+body.reduce-effects #welcome h1{filter:none}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* ═══ v5 · ajustes finos ═══ */
+.gestos-grid .emoji{width:auto;min-width:calc(40px*var(--k));padding:0 .3em;white-space:nowrap;line-height:1}
+@media (max-width:519px),(max-height:599px){
+  .gestos-grid .emoji{width:auto;min-width:calc(34px*var(--k));font-size:calc(16px*var(--k))}
+}
+@media (max-width:559px){body.en-bienvenida #hud{display:none}}   /* celular vertical: el menú usa todo el espacio */
+@media (max-width:559px),(max-height:520px){body.en-bienvenida #progreso{display:none}}   /* en el menú ya muestra el avance cada tarjeta */
+@media (max-width:359px){
+  #brand{padding-left:10px;padding-right:10px}
+  #brand b{letter-spacing:.06em}
+  #brand span{letter-spacing:.08em}
+}
+#recuerdo a{white-space:nowrap}
+@media (max-width:559px){   /* el título no pasa por debajo de la columna de botones */
+  #welcome h1,#welcome .sub{max-width:calc(100% - 2*(var(--bs) + var(--m) + var(--g)))}
+  #welcome h1{font-size:clamp(20px,5.6vw,30px)}
+}
+@media (max-width:559px) and (max-height:600px),(max-width:340px){#welcome .sub{display:none}}   /* pantallas muy chicas: el ticker ya invita a jugar */
+
+/* ═══ v5 · juegos: el resultado queda centrado y el título no pisa la cámara ═══ */
+#jResultado{transform:none;translate:-50% -50%;max-width:calc(100% - 2*var(--m))}
+#jTitulo{bottom:max(22%,calc(var(--pip-size)*.75 + 2*var(--m) + var(--sb)))}
+@media (min-aspect-ratio:8/7) and (min-width:640px){
+  #jTop{width:min(calc(100% - 2*(3*var(--bs) + 2*var(--g) + var(--m) + var(--sl) + var(--sr))),calc(360px*var(--k)))}
+}

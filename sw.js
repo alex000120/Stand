@@ -1,10 +1,10 @@
 /* Service worker · IA Holográfica
-   - La app (html/css/js) se guarda sola y se actualiza cuando hay internet.
+   - La app (html/css/js) se abre al instante desde el celular y se actualiza sola por detrás cuando hay internet.
    - Los videos y el detector (MediaPipe) se guardan con el botón de ⚙️ Configurar
      y se sirven siempre desde el celular: sin esperas ni cortes de red.
    Cada vez que cambies archivos de la app, subí el número de VERSION. */
 'use strict';
-const VERSION = 'v4';
+const VERSION = 'v5';
 const SHELL = 'holo-shell-' + VERSION;
 const MEDIA = 'holo-media-v1';   // mismo nombre que MEDIA_CACHE en app.js
 const SHELL_FILES = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest',
@@ -38,7 +38,7 @@ self.addEventListener('fetch', e => {
 
   if (propio && /\.(mp4|webm|m4v|mov)$/i.test(url.pathname)) { e.respondWith(servirVideo(req)); return; }
   if (mpCdn || url.pathname.includes('/mediapipe/')) { e.respondWith(cacheFirst(req)); return; }
-  e.respondWith(redPrimero(req));
+  e.respondWith(rapido(req, e));
 });
 
 /* Archivos del detector: si están guardados, se usan; si no, se piden y se guardan. */
@@ -76,21 +76,18 @@ async function servirVideo(req) {
   });
 }
 
-/* La app: con internet trae la versión nueva; sin internet usa la guardada. */
-async function redPrimero(req) {
+/* La app: se abre al instante con lo guardado y se actualiza por detrás (la versión nueva se ve
+   en la siguiente apertura). Sin nada guardado, se pide a la red. */
+async function rapido(req, e) {
   const cache = await caches.open(SHELL);
   const guardado = await cache.match(req, { ignoreSearch: true });
-  const pedir = () => fetch(req.url, { cache: 'no-cache' });
-  try {
-    let res;
-    if (guardado) {
-      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 3500);
-      try { res = await fetch(req.url, { cache: 'no-cache', signal: ctl.signal }); } finally { clearTimeout(t); }
-    } else res = await pedir();
+  const red = fetch(req.url, { cache: 'no-cache' }).then(res => {
     if (res && res.ok && res.type === 'basic') cache.put(req, res.clone());
     return res;
-  } catch (_) {
-    if (guardado) return guardado;
+  });
+  if (guardado) { e.waitUntil(red.catch(() => {})); return guardado; }
+  try { return await red; }
+  catch (_) {
     if (req.mode === 'navigate') { const i = await cache.match('./index.html'); if (i) return i; }
     return Response.error();
   }

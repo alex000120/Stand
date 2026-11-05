@@ -320,12 +320,14 @@ document.addEventListener('webkitfullscreenchange', sincronizarFullscreen);
 
 function mostrarBienvenida() {
   estado.welcomeVisible = true;
+  document.body.classList.add('en-bienvenida');
   E.welcome.classList.remove('oculto');
   gAmbiente(true);
 }
 function ocultarBienvenida() {
   if (!estado.welcomeVisible) return;
   estado.welcomeVisible = false;
+  document.body.classList.remove('en-bienvenida');
   E.welcome.classList.add('oculto');
   gAmbiente(false);
 }

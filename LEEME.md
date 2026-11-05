@@ -38,3 +38,14 @@ Si modificás `index.html`, `style.css` o `app.js`, subí el número `VERSION` e
 - **3 juegos nuevos**: ⚔️ Corte Ninja (letra L), 🎵 Ritmo Holo (🤘) y 🧠 Memoria Holo (👌). Teclas 6-8.
 - **Stand vivo**: saludo cuando aparece una mano, modo atracción (a los 15 s sin nadie pulsa «¡Acércate y juega!»), cartel con récords y visitantes de hoy, contador en el cartel superior y confeti escolar en el cierre.
 - Subí el `VERSION` de `sw.js` a `v3`: abrí con WiFi una vez para que se actualice.
+
+## Novedades v5 · Responsive total + rendimiento
+- **Se adapta a cualquier pantalla**: celulares chicos (desde 280 px), vertical y horizontal, tablets, notebooks, TV y 4K. Una escala fluida (`--k`, la calcula un mini script en `index.html`) agranda textos y botones en pantallas grandes sin tocar los celulares.
+- **El menú siempre entra completo** (12 opciones visibles sin scroll, también en horizontal): la cámara y los botones de abajo ya no tapan ninguna tarjeta.
+- Cartel, botones y HUD se reacomodan solos y no se superponen; respetan el notch / barra de gestos (`safe-area`).
+- Pantallas de Inicio / Rendimiento / Configuración: ya no se corta la parte de arriba en pantallas bajas (se puede hacer scroll).
+- Cierre del corazón y resultado de juegos: caben en cualquier tamaño (el resultado quedaba corrido).
+- **Más liviano**: en los presets Mínimo/Bajo y con «Reducir efectos» se quitan todos los desenfoques de vidrio (`backdrop-filter`), que son lo más pesado para un celular modesto.
+- **Service worker v5**: la app abre al instante con lo guardado y se actualiza por detrás (la versión nueva se ve en la siguiente apertura).
+- Se borró el archivo suelto `.github/workflows/N`.
+- Archivos que cambian: `index.html`, `style.css`, `app.js` (2 líneas), `sw.js`, `LEEME.md`. Los videos y el resto no se tocan.
